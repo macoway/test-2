@@ -1,21 +1,24 @@
 <?php
 
 class User {
-    private $name;
-    private $email;
-    private $password;
+    private string $name;
+    private string $email;
+    private string $password;
 
-    public function __construct($name, $email, $password) {
+    public function __construct(string $name, string $email, string $password)
+    {
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
     }
 
-    public function login($email, $password) {
+    public function login($email, $password): bool
+    {
         return ($email === $this->email && $password === $this->password);
     }
 
-    public function change_password($old_password, $new_password) {
+    public function changePassword(string $old_password, string $new_password): bool
+    {
         if ($old_password === $this->password) {
             $this->password = $new_password;
             return true;
@@ -24,20 +27,23 @@ class User {
     }
 }
 
-// Create a user object with random property values
-$user = new User("John Doe", "johndoe@example.com", "password123");
+$randomPassCorrect = bin2hex(random_bytes(10));
+$randomPassWrong   = bin2hex(random_bytes(10));
 
-// Test login with correct and incorrect data
-echo "Login with correct data:\n";
-var_dump($user->login("johndoe@example.com", "password123"));
+$user = new User("Ktoto", "ktoto@example.com", $randomPassCorrect);
 
-echo "Login with incorrect data:\n";
-var_dump($user->login("janedoe@example.com", "wrongpassword"));
+echo "Логін з невірними даними: ";
+var_dump($user->login("nekto@example.com", $randomPassWrong));
+echo "<br>";
 
-// Test changing password with correct and incorrect old password
-echo "Change password with correct old password:\n";
-var_dump($user->change_password("password123", "newpassword"));
+echo "Логін з вірними даними: ";
+var_dump($user->login("ktoto@example.com", $randomPassCorrect));
+echo "<br>";
 
-echo "Change password with incorrect old password:\n";
-var_dump($user->change_password("wrongpassword", "newpassword"));
-?>
+echo "Зміна паролю з невірними даними: ";
+var_dump($user->changePassword($randomPassWrong, 'newpass'));
+echo "<br>";
+
+echo "Зміна паролю з вірними даними: ";
+var_dump($user->changePassword($randomPassCorrect, 'newpass'));
+echo "<br>";
